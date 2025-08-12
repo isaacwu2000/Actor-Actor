@@ -1,21 +1,32 @@
 from get_page_links import get_wikipedia_page_links
-search_span = 1
+import time
 
-def recursive_link_hopping(url: str, end_url: str, path: list):
-    global search_span
+def connect_actors(start_actor_url: str, end_actor_url: str):
+    # Modified Dijkstra's algorithm implementation
+    to_visit = []
+    visited_urls = []
+    searching = True
 
-    if url==end_url:
-        print("\n",path)
-    elif len(path) <= search_span:
-        links = get_wikipedia_page_links(url)
-        for link in links:
-            if link not in path:
-                print(link, search_span, path)
-                recursive_link_hopping(link, end_url, path + [link])
-        search_span+=1
+    # Setup — Running algorithm for source
+    initial_links = get_wikipedia_page_links(start_actor_url)
+    for link in initial_links:
+        to_visit.append({"url":link, "path":[start_actor_url]+[link]})
+
+    # Iteratively expanding search
+    while searching:
+        page = to_visit[0]
+        page_links = get_wikipedia_page_links(page['url'])
+        for link in page_links:
+            if link==end_actor_url:
+                return (page['path']+[link])
+            else:
+                if link not in visited_urls: # Preventing duplicates in visited pages               
+                    to_visit.append({"url":link, "path":page['path']+[link]})
+        to_visit.remove(page)
+        visited_urls.append(page["url"])
+
 
 if __name__ == "__main__":
-    start_actor_url="https://en.wikipedia.org/wiki/Will_Smith"#input("What actor would you like to start from?\nWikipedia Page URL: ")
-    end_actor_url="https://en.wikipedia.org/wiki/Jaden_Smith"#input("\nWhat actor would you like to end at?\nWikipedia Page URL: ")
-
-    recursive_link_hopping(start_actor_url, end_actor_url, [start_actor_url])
+    start_actor_url=input("What actor would you like to start from?\nWikipedia Page URL: ")
+    end_actor_url=input("\nWhat actor would you like to end at?\nWikipedia Page URL: ")
+    print("\n"+"Path: "+str(connect_actors(start_actor_url, end_actor_url)))

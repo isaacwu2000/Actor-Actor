@@ -17,5 +17,6 @@ def get_wikipedia_page_links(url: str)->list:
                 link_is_relevant = False
         if link_is_relevant:
             relevant_links.add("https://en.wikipedia.org" + link)
+            #print("https://en.wikipedia.org" + link)
 
     return list(relevant_links)
