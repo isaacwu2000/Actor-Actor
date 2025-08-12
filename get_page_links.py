@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup
 import requests
 import re
 
-def get_wikipedia_page_links(url):
+def get_wikipedia_page_links(url: str)->list:
     irrelevant_starts = ['Main_Page','Wikipedia','Help','Special','Talk','File','ISBN']
     relevant_links = set()
 
@@ -16,8 +16,6 @@ def get_wikipedia_page_links(url):
             if link.replace("/wiki/","").startswith(start):
                 link_is_relevant = False
         if link_is_relevant:
-            relevant_links.add(link)
+            relevant_links.add("https://en.wikipedia.org" + link)
 
-    return relevant_links
-
-print(get_wikipedia_page_links("https://en.wikipedia.org/wiki/Will_Smith"))
+    return list(relevant_links)
